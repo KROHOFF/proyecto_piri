@@ -1,0 +1,2 @@
+llegar notificacion de ticket al usuario al mail
+area de soporte crear tickets 
