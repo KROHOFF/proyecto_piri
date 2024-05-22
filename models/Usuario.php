@@ -3,51 +3,70 @@
     class Usuario extends Conectar{
 
             /* TODO: Funcion de login y generacion de session */
-            public function login(){
-                $conectar=parent::conexion();
+            public function login() {
+                $conectar = parent::conexion();
                 parent::set_names();
-                if(isset($_POST["enviar"])){
+                if (isset($_POST["enviar"])) {
                     $correo = $_POST["usu_correo"];
                     $pass = $_POST["usu_pass"];
-                    $rol = $_POST["rol_id"];
-                    if(empty($correo) and empty($pass)){
-                        header("Location:".conectar::ruta()."index.php?m=2");
+
+                    // Verificar si los campos están vacíos
+                    if (empty($correo) || empty($pass)) {
+                        header("Location:" . Conectar::ruta() . "index.php?m=2");
                         exit();
-                    }else{
-                        $sql = "SELECT * FROM tm_usuario WHERE usu_correo=? and rol_id=? and est=1";
-                        $stmt=$conectar->prepare($sql);
-                        $stmt->bindValue(1, $correo);
-                        $stmt->bindValue(2, $rol);
+                    }
+                    // Preparar la consulta SQL
+                    $sql_usuario = "SELECT * FROM tm_usuario WHERE usu_correo = ?";
+                    $stmt = $conectar->prepare($sql_usuario);
+                    $stmt->bindValue(1, $correo);
+
+                    try {
                         $stmt->execute();
-                        $resultado = $stmt->fetch();
-                        if($resultado){
-                            $textocifrado = $resultado["usu_pass"];
-    
-                            $key="mi_key_secret";
-                            $cipher="aes-256-cbc";
-                            $iv_dec = substr(base64_decode( $textocifrado), 0, openssl_cipher_iv_length($cipher));
-                            $cifradoSinIV = substr(base64_decode( $textocifrado), openssl_cipher_iv_length($cipher));
+                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        if ($result) {
+                            // Obtener el valor del campo usu_rol_id
+                            $usu_rol_id = $result['rol_id'];
+
+                            // Verificar contraseña
+                            $textocifrado = $result["usu_pass"];
+                            $key = "mi_key_secret";
+                            $cipher = "aes-256-cbc";
+                            $iv_dec = substr(base64_decode($textocifrado), 0, openssl_cipher_iv_length($cipher));
+                            $cifradoSinIV = substr(base64_decode($textocifrado), openssl_cipher_iv_length($cipher));
                             $decifrado = openssl_decrypt($cifradoSinIV, $cipher, $key, OPENSSL_RAW_DATA, $iv_dec);
-    
-                            if($decifrado==$pass){
-                                if (is_array($resultado) and count($resultado)>0){
-                                    $_SESSION["usu_id"]=$resultado["usu_id"];
-                                    $_SESSION["usu_nom"]=$resultado["usu_nom"];
-                                    $_SESSION["usu_ape"]=$resultado["usu_ape"];
-                                    $_SESSION["rol_id"]=$resultado["rol_id"];
-                                    header("Location:".Conectar::ruta()."view/Home/");
-                                    exit(); 
-                                }else{
-                                    header("Location:".Conectar::ruta()."index.php?m=1");
+
+                            if ($decifrado == $pass) {
+                                // Verificar si el usuario está activo
+                                if ($result['est'] == 1) {
+                                    $_SESSION["usu_id"] = $result["usu_id"];
+                                    $_SESSION["usu_nom"] = $result["usu_nom"];
+                                    $_SESSION["usu_ape"] = $result["usu_ape"];
+                                    $_SESSION["rol_id"] = $result["rol_id"];
+                                    header("Location:" . Conectar::ruta() . "view/Home/");
+                                    exit();
+                                } else {
+                                    header("Location:" . Conectar::ruta() . "index.php?m=1");
                                     exit();
                                 }
+                            } else {
+                                // Contraseña incorrecta
+                                header("Location:" . Conectar::ruta() . "index.php?m=1");
+                                exit();
                             }
+                        } else {
+                            // No se encontró el usuario
+                            header("Location:" . Conectar::ruta() . "index.php?m=1");
+                            exit();
                         }
+                    } catch (PDOException $e) {
+                        echo "Error: " . $e->getMessage();
                     }
                 }
             }
 
-        
+
+
         public function nuevo_usuario($usu_nom, $usu_ape, $usu_correo, $usu_pass, $rol_id, $usu_telf){
 
         $key="mi_key_secret";
@@ -58,7 +77,7 @@
 
         $conectar= parent::conexion();
         parent::set_names();
-        $sql="INSERT INTO tm_usuario (usu_id, usu_nom, usu_ape, usu_correo, usu_pass, rol_id, usu_telf, fech_crea, fech_modi, fech_elim, est) 
+        $sql="INSERT INTO tm_usuario (usu_id, usu_nom, usu_ape, usu_correo, usu_pass, rol_id, usu_telf, fech_crea, fech_modi, fech_elim, est)
                 VALUES (NULL,?,?,?,?,?,?,now(), NULL, NULL, '1');";
         $sql=$conectar->prepare($sql);
         $sql->bindValue(1, $usu_nom);
@@ -70,7 +89,7 @@
         $sql->execute();
         return $resultado=$sql->fetchAll();
         }
-        
+
         public function insert_usuario($usu_nom,$usu_ape,$usu_correo,$usu_pass,$rol_id,$usu_telf){
 
             $key="mi_key_secret";
@@ -81,7 +100,7 @@
 
             $conectar= parent::conexion();
             parent::set_names();
-            $sql="INSERT INTO tm_usuario (usu_id, usu_nom, usu_ape, usu_correo, usu_pass, rol_id, usu_telf, fech_crea, fech_modi, fech_elim, est) 
+            $sql="INSERT INTO tm_usuario (usu_id, usu_nom, usu_ape, usu_correo, usu_pass, rol_id, usu_telf, fech_crea, fech_modi, fech_elim, est)
                     VALUES (NULL,?,?,?,?,?,?,now(), NULL, NULL, '1');";
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $usu_nom);
@@ -215,13 +234,13 @@
             $conectar= parent::conexion();
             parent::set_names();
             $sql="SELECT tm_categoria.cat_nom as nom,COUNT(*) AS total
-                FROM   tm_ticket  JOIN  
-                    tm_categoria ON tm_ticket.cat_id = tm_categoria.cat_id  
-                WHERE    
+                FROM   tm_ticket  JOIN
+                    tm_categoria ON tm_ticket.cat_id = tm_categoria.cat_id
+                WHERE
                 tm_ticket.est = 1
                 and tm_ticket.usu_id = ?
-                GROUP BY 
-                tm_categoria.cat_nom 
+                GROUP BY
+                tm_categoria.cat_nom
                 ORDER BY total DESC";
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $usu_id);
