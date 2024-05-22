@@ -59,7 +59,7 @@ if (isset($_POST["enviar"]) && $_POST["enviar"] == "si") {
                     <div class="sign-avatar">
                         <img src="public/1.jpg" alt="" id="imgtipo">
                     </div>
-                    <header class="sign-title" id="lbltitulo">Acceso Usuario</header>
+                    <header class="sign-title" id="lbltitulo">Iniciar Sesión</header>
 
                     <!-- TODO: validar segun valor al iniciar session -->
                     <?php
@@ -105,12 +105,12 @@ if (isset($_POST["enviar"]) && $_POST["enviar"] == "si") {
                         <div class="float-right reset">
                             <a href="view/ResetPassword/">Recuperar Contraseña</a>
                         </div>
-                        <div class="float-left reset">
+                        <!-- <div class="float-left reset">
                             <a href="#" id="btnsoporte">Acceso Soporte</a>
                         </div>
                         <div class="float-right reset">
                             <a href="#" id="btnadmin">Acceso Admin</a>
-                        </div>
+                        </div> -->
                     </div>
                     <input type="hidden" name="enviar" class="form-control" value="si">
                     <button type="submit" class="btn btn-rounded">Acceder</button>
