@@ -78,9 +78,7 @@
                 INNER join tm_categoria on tm_ticket.cat_id = tm_categoria.cat_id
                 INNER join tm_usuario on tm_ticket.usu_id = tm_usuario.usu_id
                 INNER join tm_prioridad on tm_ticket.prio_id = tm_prioridad.prio_id
-                WHERE
-                tm_ticket.est = 1 or tm_ticket.est = 2 or tm_ticket.est = 3
-                AND tm_ticket.tick_id = ?";
+                WHERE tm_ticket.tick_id = ?";
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $tick_id);
             $sql->execute();
