@@ -193,33 +193,33 @@
                 $datos=$ticket->filtrar_ticket($_POST["tick_titulo"],$_POST["cat_id"],$_POST["prio_id"]);
                 $data= Array();
                 foreach($datos as $row){
-    
+
                     $sub_array = array();
                     $sub_array[] = $row["tick_id"];
                     $sub_array[] = $row["cat_nom"];
                     $sub_array[] = $row["tick_titulo"];
                     $sub_array[] = $row["prio_nom"];
-    
+
                     if ($row["tick_estado"]=="Abierto"){
                         $sub_array[] = '<span class="label label-pill label-success">Abierto</span>';
                     }else{
                         $sub_array[] = '<a onClick="CambiarEstado('.$row["tick_id"].')"><span class="label label-pill label-danger">Cerrado</span><a>';
                     }
-    
+
                     $sub_array[] = date("d/m/Y H:i:s", strtotime($row["fech_crea"]));
-    
+
                     if($row["fech_asig"]==null){
                         $sub_array[] = '<span class="label label-pill label-default">Sin Asignar</span>';
                     }else{
                         $sub_array[] = date("d/m/Y H:i:s", strtotime($row["fech_asig"]));
                     }
-    
+
                     if($row["fech_cierre"]==null){
                         $sub_array[] = '<span class="label label-pill label-default">Sin Cerrar</span>';
                     }else{
                         $sub_array[] = date("d/m/Y H:i:s", strtotime($row["fech_cierre"]));
                     }
-    
+
                     if($row["usu_asig"]==null){
                         $sub_array[] = '<a onClick="asignar('.$row["tick_id"].');"><span class="label label-pill label-warning">Sin Asignar</span></a>';
                     }else{
@@ -228,16 +228,16 @@
                             $sub_array[] = '<span class="label label-pill label-success">'. $row1["usu_nom"].' '.  $row1["usu_ape"].'</span>';
                         }
                     }
-    
+
                     $cifrado = openssl_encrypt($row["tick_id"], $cipher, $key, OPENSSL_RAW_DATA, $iv);
                     $textoCifrado = base64_encode($iv . $cifrado);
-    
+
                     $sub_array[] = '<button type="button" data-ciphertext="'.$textoCifrado.'" id="'.$textoCifrado.'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
                     $data[] = $sub_array;
                 }
-    
-    
-    
+
+
+
                 $results = array(
                     "sEcho"=>1,
                     "iTotalRecords"=>count($data),
@@ -303,8 +303,8 @@
                 "aaData"=>$data);
             echo json_encode($results);
             break;
-        
-        
+
+
         /* TODO: Formato HTML para mostrar detalle de ticket con comentarios */
         case "listardetalle":
 
@@ -373,7 +373,7 @@
                                                                 <tbody>
                                                                         <!-- TODO: Mostrar tantos documentos tenga el ticket detalle -->
                                                                         <?php
-                                                                            foreach ($datos_det as $row_det){ 
+                                                                            foreach ($datos_det as $row_det){
                                                                         ?>
                                                                             <tr>
                                                                                 <td><?php echo $row_det["det_nom"]; ?></td>
@@ -412,13 +412,12 @@
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row)
                 {
-                    $output["tick_id"] = $row["tick_id"];
-                    $output["usu_id"] = $row["usu_id"];
-                    $output["cat_id"] = $row["cat_id"];
-
-                    $output["tick_titulo"] = $row["tick_titulo"];
+                    $output["tick_id"]      = $row["tick_id"];
+                    $output["usu_id"]       = $row["usu_id"];
+                    $output["cat_id"]       = $row["cat_id"];
+                    $output["tick_titulo"]  = $row["tick_titulo"];
                     $output["tick_descrip"] = $row["tick_descrip"];
-                    $output["tick_telf"] = $row["tick_telf"];
+                    $output["tick_telf"]    = $row["tick_telf"];
 
                     if ($row["tick_estado"]=="Abierto"){
                         $output["tick_estado"] = '<span class="label label-pill label-success">Abierto</span>';
@@ -428,8 +427,10 @@
 
                     $output["tick_estado_texto"] = $row["tick_estado"];
 
+                    $fecha_cierre   = isset($row["fech_cierre"]) ? $row["fech_cierre"] : "";
+
                     $output["fech_crea"] = date("d/m/Y H:i:s", strtotime($row["fech_crea"]));
-                    $output["fech_cierre"] = date("d/m/Y H:i:s", strtotime($row["fech_cierre"]));
+                    $output["fech_cierre"] = $fecha_cierre;
                     $output["usu_nom"] = $row["usu_nom"];
                     $output["usu_ape"] = $row["usu_ape"];
                     $output["cat_nom"] = $row["cat_nom"];
@@ -439,7 +440,7 @@
             }
             break;
 
-        
+
         case "mostrar_noencry";
             $datos=$ticket->listar_ticket_x_id($_POST["tick_id"]);
             if(is_array($datos)==true and count($datos)>0){
@@ -513,7 +514,7 @@
 
         /* TODO: Total de ticket para vista de soporte */
         case "total";
-            $datos=$ticket->get_ticket_total();  
+            $datos=$ticket->get_ticket_total();
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row)
                 {
@@ -525,7 +526,7 @@
 
         /* TODO: Total de ticket Abierto para vista de soporte */
         case "totalabierto";
-            $datos=$ticket->get_ticket_totalabierto();  
+            $datos=$ticket->get_ticket_totalabierto();
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row)
                 {
@@ -537,7 +538,7 @@
 
         /* TODO: Total de ticket Cerrados para vista de soporte */
         case "totalcerrado";
-            $datos=$ticket->get_ticket_totalcerrado();  
+            $datos=$ticket->get_ticket_totalcerrado();
             if(is_array($datos)==true and count($datos)>0){
                 foreach($datos as $row)
                 {
@@ -549,10 +550,10 @@
 
         /* TODO: Formato Json para grafico de soporte */
         case "grafico";
-            $datos=$ticket->get_ticket_grafico();  
+            $datos=$ticket->get_ticket_grafico();
             echo json_encode($datos);
             break;
-        
+
         case "all_calendar":
             $datos=$ticket->get_calendar_all();
             echo json_encode($datos);

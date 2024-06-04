@@ -32,12 +32,16 @@ $(document).ready(function(){
 
     /* TODO: Mostramos informacion del ticket en inputs */
     $.post("../../controller/ticket.php?op=mostrar", { tick_id : id }, function (data) {
+
+        console.log('la data es: '+data);
         data = JSON.parse(data);
+
+
         $('#lblestado').html(data.tick_estado);
         $('#lblnomusuario').html(data.usu_nom +' '+data.usu_ape);
         $('#lblfechcrea').html(data.fech_crea);
         $('#lblnomidticket').html("Detalle Ticket - "+data.tick_id);
-        $('#cat_nom').val(data.cat_nom);     
+        $('#cat_nom').val(data.cat_nom);
         $('#tick_titulo').val(data.tick_titulo);
         $('#tickd_descripusu').summernote ('code',data.tick_descrip);
         $('#prio_nom').val(data.prio_nom);
