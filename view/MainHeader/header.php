@@ -13,7 +13,7 @@
         <button class="hamburger hamburger--htla">
             <span>toggle menu</span>
         </button>
-        
+
         <div class="site-header-content">
             <div class="site-header-content-in">
                 <div class="site-header-shown">
@@ -38,6 +38,17 @@
                     <a href="#" class="dropdown-toggle no-arr">
                         <span class="font-icon font-icon-user"></span>
                         <span class="lblcontactonomx"><?php echo $_SESSION["usu_nom"] ?> <?php echo $_SESSION["usu_ape"] ?></span>
+                        <span class="lblcontactonomx"> - [Rol:
+                            <?php
+                                if ($_SESSION["rol_id"] == 1) {
+                                    echo "Usuario";
+                                } elseif ($_SESSION["rol_id"] == 2) {
+                                    echo "Soporte";
+                                } elseif ($_SESSION["rol_id"] == 3) {
+                                    echo "Administrador";
+                                }
+                            ?>]
+                        </span>
                     </a>
                 </div>
 
