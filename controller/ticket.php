@@ -79,6 +79,10 @@
             $ticket->update_ticket_asignacion($_POST["tick_id"],$_POST["usu_asig"]);
             break;
 
+        case "reasignar":
+            $ticket->update_ticket_reasignacion($_POST["tick_id"],$_POST["usu_id"]);
+            break;
+
         /* TODO: Listado de tickets segun usuario,formato json para Datatable JS */
         case "listar_x_usu":
             $datos=$ticket->listar_ticket_x_usu($_POST["usu_id"]);
