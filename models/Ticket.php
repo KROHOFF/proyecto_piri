@@ -46,7 +46,9 @@
                 INNER join tm_prioridad on tm_ticket.prio_id = tm_prioridad.prio_id
                 WHERE
                 tm_ticket.est = 1 or tm_ticket.est = 2 or tm_ticket.est = 3
-                AND tm_usuario.usu_id=?";
+                AND tm_usuario.usu_id=?
+                order by tick_id desc
+                ";
             $sql=$conectar->prepare($sql);
             $sql->bindValue(1, $usu_id);
             $sql->execute();

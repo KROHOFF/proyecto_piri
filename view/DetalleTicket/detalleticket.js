@@ -248,9 +248,21 @@ $(document).on("click", "#btncerrarticket", function () {
 });
 
 function mostrar_usuarios(data) {
+
+
+
+  // console.log('EL USUARIO ES:'+user_id);
+
+  // if (user_id) {
+  //   $("#div_reasignar_ticket").hide();
+  // }
+
+
   $.post("../../controller/usuario.php?op=combo", function (data, status) {
     $("#usu_id").html(data);
   });
+
+
 }
 
 function reasignar_ticket() {
