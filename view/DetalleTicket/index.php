@@ -69,17 +69,31 @@ if (isset($_SESSION["usu_id"])) {
               </fieldset>
             </div>
 
-            <form method="post" id="form_reasignar_ticket">
-              <input type="hidden" id="ticket_idx" name="ticket_idx" value="">
-              <div class="col-lg-6">
-                <fieldset class="form-group">
-                  <label class="form-label semibold" for="exampleInput">Re-Asignar</label>
-                  <select id="usu_id" name="usu_id" class="form-control" onchange="reasignar_ticket();">
 
-                  </select>
-                </fieldset>
-              </div>
-            </form>
+            <?php
+            $rol_id  = $_SESSION["rol_id"];
+
+
+            if ($rol_id != '1') {
+              # code...
+
+            ?>
+
+              <form method="post" id="form_reasignar_ticket">
+                <input type="hidden" id="ticket_idx" name="ticket_idx" value="">
+                <div id="div_reasignar_ticket" class="col-lg-6">
+                  <fieldset class="form-group">
+                    <label class="form-label semibold" for="exampleInput">Re-Asignar</label>
+                    <select id="usu_id" name="usu_id" class="form-control" onchange="reasignar_ticket();">
+
+                    </select>
+                  </fieldset>
+                </div>
+              </form>
+
+            <?php
+            }
+            ?>
 
             <div class="col-lg-12">
               <fieldset class="form-group">
