@@ -33,7 +33,6 @@ if (isset($_SESSION["usu_id"])) {
                   <li class="active">Detalle Ticket</li>
                 </ol>
               </div>
-
             </div>
           </div>
         </header>

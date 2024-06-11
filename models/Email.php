@@ -13,8 +13,8 @@ require_once("../Models/Usuario.php");
 class Email extends PHPMailer{
 
     //variable que contiene el correo del destinatario
-    protected $gCorreo = 'oscargonvargas15@gmail.com';
-    protected $gContrasena = 'fhjx fjor gxxt bhnl';
+    protected $gCorreo = 'soporte@virtuanet.cl';
+    protected $gContrasena = 'Boldo.2023';
     //variable que contiene la contraseña del destinatario
 
     public function ticket_abierto($tick_id){
@@ -31,13 +31,13 @@ class Email extends PHPMailer{
 
         //IGual//
         $this->IsSMTP();
-        $this->Host = 'smtp.gmail.com';//Aqui el server
-        $this->Port = 587;//Aqui el puerto
+        $this->Host = 'mail.virtuanet.cl';//Aqui el server
+        $this->Port = 465;//Aqui el puerto
         $this->SMTPAuth = true;
         $this->SMTPSecure = 'tls';
-        $this->Username = 'carlosguanel98@gmail.com';
+        $this->Username = $this->gCorreo;
         $this->Password = $this->gContrasena;
-        $this->setFrom('carlosguanel98@gmail.com', "Ticket Abierto ".$id);
+        $this->setFrom($this->gCorreo, "Ticket Abierto ".$id);
         $this->CharSet = 'UTF8';
         $this->addAddress($correo);
         $this->IsHTML(true);
@@ -75,14 +75,14 @@ class Email extends PHPMailer{
 
         //IGual//
         $this->IsSMTP();
-        $this->Host = 'smtp.gmail.com';//Aqui el server
-        $this->Port = 587;//Aqui el puerto
+        $this->Host = 'mail.virtuanet.cl';//Aqui el server
+        $this->Port = 465;//Aqui el puerto
         $this->SMTPAuth = true;
-        $this->Username = 'carlosguanel98@gmail.com';
+        $this->Username = $this->gCorreo;
         $this->Password = $this->gContrasena;
         $this->SMTPSecure = 'tls';
 
-        $this->setFrom('carlosguanel98@gmail.com', "Ticket Asignado ".$id);
+        $this->setFrom($this->gCorreo, "Ticket Asignado ".$id);
 
         $this->CharSet = 'UTF8';
         $this->addAddress($correo);
@@ -106,7 +106,7 @@ class Email extends PHPMailer{
         }catch(Exception $e){
             return false;
         }
-    }              
+    }
 
     public function recuperar_contrasena($usu_correo){
         $usuario = new Usuario();
@@ -124,13 +124,13 @@ class Email extends PHPMailer{
 
         //TODO: IGual//
         $this->IsSMTP();
-        $this->Host = 'smtp.gmail.com';//Aqui el server
-        $this->Port = 587;//Aqui el puerto
+        $this->Host = 'mail.virtuanet.cl';//Aqui el server
+        $this->Port = 465;//Aqui el puerto
         $this->SMTPAuth = true;
         $this->SMTPSecure = 'tls';
-        $this->Username = 'carlosguanel98@gmail.com';
+        $this->Username = $this->gCorreo;
         $this->Password = $this->gContrasena;
-        $this->setFrom('carlosguanel98@gmail.com', "Recuperar Contraseña");
+        $this->setFrom($this->gCorreo, "Recuperar Contraseña");
         $this->CharSet = 'UTF8';
         $this->addAddress($correo);
         $this->IsHTML(true);
